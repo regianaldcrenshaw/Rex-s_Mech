@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cash Register POS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        .items {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .items button {
+            flex: 1 1 48%;
+            margin: 5px 0;
+            padding: 10px;
+        }
+        .total, .actions {
+            margin-top: 20px;
+            text-align: right;
+        }
+        button {
+            margin: 5px 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Cash Register POS</h2>
+        <div class="items" id="items">
+            <script>
+                const items = [
+                    { name: 'Cosmetic Part', price: 4500 },
+                    { name: 'Repair', price: 2500 },
+                    { name: 'Respray', price: 3000 },
+                    { name: 'Tire Replacement', price: 1500 },
+                    { name: 'Clutch Replacement', price: 1600 },
+                    { name: 'Air Filter', price: 1000 },
+                    { name: 'Spark Plug', price: 400 },
+                    { name: 'Suspension Parts', price: 1650 },
+                    { name: 'Brakepad Replacement', price: 250 },
+                    { name: '14 Engine', price: 30000 },
+                    { name: 'V6 Engine', price: 45000 },
+                    { name: 'V8 Engine', price: 65000 },
+                    { name: 'V12 Engine', price: 100000 },
+                    { name: 'Turbo', price: 35000 },
+                    { name: 'EV Motor', price: 3340 },
+                    { name: 'EV Coolant', price: 5220 },
+                    { name: 'AWD', price: 25000 },
+                    { name: 'RWD', price: 25000 },
+                    { name: 'FWD', price: 25000 },
+                    { name: 'Slick Tyres', price: 11340 },
+                    { name: 'Semi Slick Tyres', price: 11200 },
+                    { name: 'Offroad Tyres', price: 11200 },
+                    { name: 'Drift Kit', price: 102380},
+                    { name: 'Lighting Controller', price: 5000 },
+                    { name: 'Stance Kit', price: 10000 },
+                    { name: 'Engine Oil', price: 850 },
+                    { name: 'Vehicle Wheels', price: 12000 },
+                    { name: 'Tyre Smoke', price: 2750 },
+                    { name: 'Extra', price: 1500 },
+                    { name: 'Cleaning', price: 500 },
+                    { name: 'Preformance Part', price: 20000 },
+                    { name: 'Ceramic Break', price: 25000 }
+                ];
+
+                items.forEach((item, index) => {
+                    document.write(`
+                        <button onclick="addItem(${index})">${item.name} ($${item.price.toFixed(2)})</button>
+                    `);
+                });
+            </script>
+        </div>
+        <div class="total">
+            <h3>Total: $<span id="total">0.00</span></h3>
+        </div>
+        <div class="actions">
+            <button onclick="applyDiscount()">Apply 10% Discount</button>
+            <button onclick="copyOrder()">Copy Order</button>
+            <button onclick="clearOrder()">Clear Order</button>
+        </div>
+    </div>
+
+    <script>
+        const order = Array(32).fill(0); // Initialize order quantities for each item
+
+        function addItem(index) {
+            order[index]++;
+            calculateTotal();
+        }
+
+        function calculateTotal() {
+            let total = 0;
+            for (let i = 0; i < order.length; i++) {
+                total += order[i] * items[i].price;
+            }
+            document.getElementById('total').innerText = total.toFixed(2);
+        }
+
+        function applyDiscount() {
+            let total = parseFloat(document.getElementById('total').innerText);
+            total *= 0.9;
+            document.getElementById('total').innerText = total.toFixed(2);
+        }
+
+        function copyOrder() {
+            let orderText = 'Order Summary:\n';
+            for (let i = 0; i < order.length; i++) {
+                if (order[i] > 0) {
+                    orderText += `${items[i].name}: ${order[i]} x $${items[i].price.toFixed(2)}\n`;
+                }
+            }
+            orderText += `Total: $${document.getElementById('total').innerText}`;
+            navigator.clipboard.writeText(orderText).then(() => {
+                alert('Order copied to clipboard!');
+            });
+        }
+
+        function clearOrder() {
+            for (let i = 0; i < order.length; i++) {
+                order[i] = 0;
+            }
+            document.getElementById('total').innerText = '0.00';
+        }
+    </script>
+</body>
+</html>
